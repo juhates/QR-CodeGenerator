@@ -1,13 +1,21 @@
 import pyqrcode
 
+##############################################
+# pip install pyqrcode
+# pip install pypng
+
 def qrcode():
-    index = 0  
-    file = open('qr-codes.txt') # File path
-    for row in file:
-        qr = pyqrcode.create(row)
-        qr.png(str(index) + '.png', scale=6)
-        index = index + 1
+    with open('qr-codes.txt', 'r') as file:
+        for row in file:
+            row = row.strip()  # Remove newline characters and leading/trailing whitespace
+            # Replace invalid characters
+            safe_filename = row.replace('/', '_').replace(':', '_')
+            safe_filename = safe_filename.replace(
+                'https___www.', '')  # Remove 'https___www.' part
+            qr = pyqrcode.create(row)
+            qr.png(safe_filename + '.png', scale=6)
     print('QR Code Generation Completed...')
+
 
 if __name__ == "__main__":
     qrcode()
